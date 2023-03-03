@@ -9,5 +9,23 @@ public static class DBSeeder
         {
             return;
         }
+
+        var firstContact = new Contact()
+        {
+            Name = "Kazimierz",
+            Surname = "Wielki",
+            Password = "ffds333D"
+        };
+
+        var secondContact = new Contact()
+        {
+            Name = "Kazimierz",
+            Surname = "Jagiellończyk",
+            Password = "ffds333D"
+
+        };
+
+        context.AddRange(firstContact, secondContact);
+        context.SaveChanges();
     }
 }
