@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.Net.Http.Headers;
 using Microsoft.Identity.Web;
 using Microsoft.EntityFrameworkCore;
 using DAL;
@@ -21,10 +22,15 @@ builder.Services.AddMediatR(cfg =>
 {
     cfg.RegisterServicesFromAssembly(typeof(Program).Assembly);
 });
+builder.Services.AddMediatR(cfg =>
+{
+    cfg.RegisterServicesFromAssembly(typeof(AppServices.Models.Category).Assembly);
+});
 
 builder.Services.AddDbContext<ContactsContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("ContactsDatabase")));
+    options.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=ContactsDataBase;Trusted_Connection=True;TrustServerCertificate=True"));
 
+builder.Services.AddScoped<DAL.Repositories.ContactRepository>();
 
 var app = builder.Build();
 
@@ -39,6 +45,15 @@ using (var scope = app.Services.CreateScope())
     var services = scope.ServiceProvider;
     var context = services.GetRequiredService<ContactsContext>();
     DBSeeder.Seed(context);
+}
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseCors(policy =>
+    policy.WithOrigins("https://localhost:7186", "http://localhost:5293")
+    .AllowAnyMethod()
+    .AllowAnyHeader()
+    .WithHeaders(HeaderNames.ContentType));
 }
 
 app.UseHttpsRedirection();
