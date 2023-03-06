@@ -24,7 +24,7 @@ public class ContactsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<List<Contact>>> GetAllContacts()
+    public async Task<ActionResult<List<ContactBaseInformation>>> GetAllContacts()
     {
         var response = await _mediator.Send(new GetAllContactsQuery());
         if (response.Count() == 0) return NoContent();

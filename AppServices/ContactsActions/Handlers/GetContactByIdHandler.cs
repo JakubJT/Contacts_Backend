@@ -1,7 +1,7 @@
 using MediatR;
+using AutoMapper;
 using AppServices.ContactsActions.Queries;
 using AppServices.Models;
-using AutoMapper;
 using DAL.Repositories;
 
 namespace ApplicationServices.Domain.WordActions.Handlers;
