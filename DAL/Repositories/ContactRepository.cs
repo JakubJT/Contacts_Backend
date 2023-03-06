@@ -51,4 +51,12 @@ public class ContactRepository
         await _context.SaveChangesAsync();
     }
 
+    public async Task<bool> CheckIfEmailExists(string email)
+    {
+        var contactFromDB = await _context.Contacts!.
+                            SingleOrDefaultAsync(c => c.Email == email);
+        if (contactFromDB == default) return false;
+        else return true;
+    }
+
 }

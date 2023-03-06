@@ -44,7 +44,7 @@ public class ContactsController : ControllerBase
         });
 
         if (contactFromDB == null) return NotFound();
-        return contactFromDB;
+        return Ok(contactFromDB);
     }
 
     [HttpPost]
@@ -54,6 +54,9 @@ public class ContactsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> CreateContact(Contact contact)
     {
+        var isEmailUnique = await _mediator.Send(new CheckEmailUniquenessQuery() { Email = contact.Email });
+        if (isEmailUnique == false) return Conflict();
+
         await _mediator.Send(new CreateContactCommand() { Contact = contact });
         return NoContent();
     }
@@ -68,6 +71,9 @@ public class ContactsController : ControllerBase
     {
         var contactFromDB = await _mediator.Send(new GetContactByIdQuery() { ContactId = contact.ContactId });
         if (contactFromDB == null) return NotFound();
+
+        var isEmailUnique = await _mediator.Send(new CheckEmailUniquenessQuery() { Email = contact.Email });
+        if (isEmailUnique == false) return Conflict();
 
         await _mediator.Send(new EditContactCommand() { Contact = contact });
         return NoContent();

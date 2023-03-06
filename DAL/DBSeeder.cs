@@ -30,25 +30,25 @@ public static class DBSeeder
         {
             Name = "Boss",
             IsDefaultSubcategory = true,
-            Category = categoryOne
+            CategoryId = categoryOne.CategoryId
         };
         var subcategoryTwo = new Subcategory()
         {
             Name = "Client",
             IsDefaultSubcategory = true,
-            Category = categoryOne
+            CategoryId = categoryOne.CategoryId
         };
         var subcategoryThree = new Subcategory()
         {
             Name = "Office",
             IsDefaultSubcategory = true,
-            Category = categoryOne
+            CategoryId = categoryOne.CategoryId
         };
 
         var subcategoryFour = new Subcategory()
         {
             Name = "Nowa",
-            Category = categoryThree
+            CategoryId = categoryThree.CategoryId
         };
 
         context.AddRange(subcategoryOne, subcategoryTwo, subcategoryThree, subcategoryFour);

@@ -34,6 +34,8 @@ builder.Services.AddDbContext<ContactsContext>(options =>
     options.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=ContactsDataBase;Trusted_Connection=True;TrustServerCertificate=True"));
 
 builder.Services.AddScoped<DAL.Repositories.ContactRepository>();
+builder.Services.AddScoped<DAL.Repositories.CategoryRepository>();
+builder.Services.AddScoped<DAL.Repositories.SubcategoryRepository>();
 
 var app = builder.Build();
 
