@@ -20,7 +20,5 @@ public class Contact
     public DateTime DateOfBirth { get; set; }
 
     public int CategoryId { get; set; }
-    public Category Category { get; set; }
     public int SubcategoryId { get; set; }
-    public Subcategory Subcategory { get; set; }
 }

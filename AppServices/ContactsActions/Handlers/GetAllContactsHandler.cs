@@ -25,17 +25,8 @@ public class GetAllContactsHandler : IRequestHandler<GetAllContactsQuery, List<C
                 ContactId = contact.ContactId,
                 Name = contact.Name,
                 Surname = contact.Surname,
-                Password = contact.Password,
                 PhoneNumber = contact.PhoneNumber,
-                Category = new AppServices.Models.Category()
-                {
-                    Name = contact.Category.Name
-                },
-                Subcategory = new AppServices.Models.Subcategory()
-                {
-                    Name = contact.Subcategory.Name
-                }
-
+                CategoryId = contact.CategoryId
             };
             mappedContacts.Add(mappedContact);
         }

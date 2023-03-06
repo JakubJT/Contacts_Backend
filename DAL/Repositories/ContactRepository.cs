@@ -22,14 +22,14 @@ public class ContactRepository
         return contacts;
     }
 
-    public async Task<Contact> GetContactById(int id)
+    public async Task<Contact?> GetContactById(int id)
     {
         var contact = await _context.Contacts!
             .AsNoTracking()
             .Include(c => c.Category)
             .Include(c => c.Subcategory)
             .FirstOrDefaultAsync(c => c.ContactId == id);
-        return contact!;
+        return contact;
     }
 
     public async Task CreateContact(Contact contact)

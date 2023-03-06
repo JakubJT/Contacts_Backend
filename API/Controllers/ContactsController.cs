@@ -4,6 +4,7 @@ using Microsoft.Identity.Web.Resource;
 using MediatR;
 using AppServices.Models;
 using AppServices.ContactsActions.Queries;
+using AppServices.ContactsActions.Commands;
 
 namespace Contacts.Server.Controllers;
 
@@ -53,7 +54,8 @@ public class ContactsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> CreateContact(Contact contact)
     {
-        return default;
+        await _mediator.Send(new CreateContactCommand() { Contact = contact });
+        return NoContent();
     }
 
     [HttpPost]
@@ -64,8 +66,11 @@ public class ContactsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> EditContact(Contact contact)
     {
-        return default;
+        var contactFromDB = await _mediator.Send(new GetContactByIdQuery() { ContactId = contact.ContactId });
+        if (contactFromDB == null) return NotFound();
 
+        await _mediator.Send(new EditContactCommand() { Contact = contact });
+        return NoContent();
     }
 
     [HttpDelete]
@@ -75,7 +80,10 @@ public class ContactsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> DeleteContacts(int contactId)
     {
-        return default;
+        var contactFromDB = await _mediator.Send(new GetContactByIdQuery() { ContactId = contactId });
+        if (contactFromDB == null) return NotFound();
 
+        await _mediator.Send(new DeleteContactCommand() { ContactId = contactId });
+        return NoContent();
     }
 }

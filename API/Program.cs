@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Net.Http.Headers;
 using Microsoft.Identity.Web;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper;
+using AppServices.MapperProfiles;
 using DAL;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,6 +28,7 @@ builder.Services.AddMediatR(cfg =>
 {
     cfg.RegisterServicesFromAssembly(typeof(AppServices.Models.Category).Assembly);
 });
+builder.Services.AddAutoMapper(typeof(ContactProfile));
 
 builder.Services.AddDbContext<ContactsContext>(options =>
     options.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=ContactsDataBase;Trusted_Connection=True;TrustServerCertificate=True"));
