@@ -5,12 +5,12 @@ using MediatR;
 using AppServices.Models;
 using AppServices.ContactsActions.Queries;
 using AppServices.ContactsActions.Commands;
+using AppServices.SubcategoryActions.Commands;
 
 namespace Contacts.Server.Controllers;
 
 [ApiController]
 [Route("[controller]/[action]")]
-// [RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
 public class ContactsController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -54,8 +54,13 @@ public class ContactsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> CreateContact(Contact contact)
     {
-        var isEmailUnique = await _mediator.Send(new CheckEmailUniquenessQuery() { Email = contact.Email });
+        var isEmailUnique = await _mediator.Send(new CheckEmailUniquenessQuery() { Email = contact.Email! });
         if (isEmailUnique == false) return Conflict();
+
+        if (contact.Subcategory.IsDefaultSubcategory == false)
+        {
+            await _mediator.Send(new CreateSubcategoryCommand() { SubcategoryName = contact.Subcategory.Name });
+        }
 
         await _mediator.Send(new CreateContactCommand() { Contact = contact });
         return NoContent();
@@ -72,7 +77,7 @@ public class ContactsController : ControllerBase
         var contactFromDB = await _mediator.Send(new GetContactByIdQuery() { ContactId = contact.ContactId });
         if (contactFromDB == null) return NotFound();
 
-        var isEmailUnique = await _mediator.Send(new CheckEmailUniquenessQuery() { Email = contact.Email });
+        var isEmailUnique = await _mediator.Send(new CheckEmailUniquenessQuery() { Email = contact.Email! });
         if (isEmailUnique == false) return Conflict();
 
         await _mediator.Send(new EditContactCommand() { Contact = contact });
