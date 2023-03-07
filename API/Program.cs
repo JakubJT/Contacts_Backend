@@ -55,7 +55,7 @@ using (var scope = app.Services.CreateScope())
 if (app.Environment.IsDevelopment())
 {
     app.UseCors(policy =>
-    policy.WithOrigins("https://localhost:7186", "http://localhost:5293")
+    policy.WithOrigins(builder.Configuration.GetSection("FrontendUrl").Value)
     .AllowAnyMethod()
     .AllowAnyHeader()
     .WithHeaders(HeaderNames.ContentType));

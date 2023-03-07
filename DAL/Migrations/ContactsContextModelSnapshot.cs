@@ -30,6 +30,9 @@ namespace DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CategoryId"));
 
+                    b.Property<bool>("DoesHaveSubcategories")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsAddingSubcategoryPossible")
                         .HasColumnType("bit");
 
@@ -68,7 +71,7 @@ namespace DAL.Migrations
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("SubcategoryId")
+                    b.Property<int?>("SubcategoryId")
                         .HasColumnType("int");
 
                     b.Property<string>("Surname")
@@ -118,8 +121,7 @@ namespace DAL.Migrations
                     b.HasOne("DAL.Models.Subcategory", "Subcategory")
                         .WithMany()
                         .HasForeignKey("SubcategoryId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("Category");
 

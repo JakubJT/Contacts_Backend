@@ -18,7 +18,7 @@ public class CreateContactHandler : IRequestHandler<CreateContactCommand>
 
     public async Task Handle(CreateContactCommand request, CancellationToken cancellationToken)
     {
-        var dalContact = _mapper.Map<DAL.Models.Contact>(request);
+        var dalContact = _mapper.Map<DAL.Models.Contact>(request.Contact);
         await _contactRepository.CreateContact(dalContact);
     }
 }

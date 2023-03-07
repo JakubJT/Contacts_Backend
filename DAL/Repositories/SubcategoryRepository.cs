@@ -21,23 +21,25 @@ public class SubcategoryRepository
         return subcategories;
     }
 
-    public async Task CreateSubcategory(string subcategoryName)
+    public async Task<int> CreateSubcategory(string subcategoryName, int categoryId)
     {
-        bool doesSubcategoryExist = await CheckIfSubcategoryExists(subcategoryName);
-        if (doesSubcategoryExist) return;
+        var subcategoryId = await CheckIfSubcategoryExists(subcategoryName, categoryId);
+        if (subcategoryId is not null) return (int)subcategoryId;
 
-        Subcategory newSubcategory = new() { Name = subcategoryName };
+        Subcategory newSubcategory = new() { Name = subcategoryName, CategoryId = categoryId };
         _context.Subcategories!.Add(newSubcategory);
         await _context.SaveChangesAsync();
+        return newSubcategory.SubcategoryId;
     }
 
-    private async Task<bool> CheckIfSubcategoryExists(string subcategoryName)
+    private async Task<int?> CheckIfSubcategoryExists(string subcategoryName, int categoryId)
     {
         var subcategory = await _context.Subcategories!
-            .Where(s => s.Name == subcategoryName)
+            .AsNoTracking()
+            .Where(s => s.Name == subcategoryName && s.CategoryId == categoryId)
             .SingleOrDefaultAsync();
-        if (subcategory is null) return false;
-        return true;
+        if (subcategory is null) return null;
+        return subcategory.SubcategoryId;
     }
 
 }

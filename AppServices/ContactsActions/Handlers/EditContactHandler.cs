@@ -18,7 +18,7 @@ public class EditContactHandler : IRequestHandler<EditContactCommand>
 
     public async Task Handle(EditContactCommand request, CancellationToken cancellationToken)
     {
-        var dalContact = _mapper.Map<DAL.Models.Contact>(request);
+        var dalContact = _mapper.Map<DAL.Models.Contact>(request.Contact);
         await _contactRepository.EditContact(dalContact);
     }
 }

@@ -4,14 +4,14 @@ using AppServices.ContactsActions.Queries;
 using AppServices.Models;
 using DAL.Repositories;
 
-namespace ApplicationServices.Domain.WordActions.Handlers;
+namespace AppServices.ContactActions.Handlers;
 
-public class GetWordByIdHandler : IRequestHandler<GetContactByIdQuery, Contact>
+public class GetContactByIdHandler : IRequestHandler<GetContactByIdQuery, Contact>
 {
     private readonly ContactRepository _contactRepository;
     private readonly IMapper _mapper;
 
-    public GetWordByIdHandler(ContactRepository contactRepository, IMapper mapper)
+    public GetContactByIdHandler(ContactRepository contactRepository, IMapper mapper)
     {
         _contactRepository = contactRepository;
         _mapper = mapper;

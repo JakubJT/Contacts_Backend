@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(ContactsContext))]
-    [Migration("20230305133632_CategoryAndSubcategoryAdded")]
-    partial class CategoryAndSubcategoryAdded
+    [Migration("20230307201928_ReadyToShow")]
+    partial class ReadyToShow
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -32,6 +32,9 @@ namespace DAL.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CategoryId"));
+
+                    b.Property<bool>("DoesHaveSubcategories")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsAddingSubcategoryPossible")
                         .HasColumnType("bit");
@@ -68,10 +71,10 @@ namespace DAL.Migrations
                     b.Property<string>("Password")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("PhoneNumber")
-                        .HasColumnType("int");
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("SubcategoryId")
+                    b.Property<int?>("SubcategoryId")
                         .HasColumnType("int");
 
                     b.Property<string>("Surname")
@@ -121,8 +124,7 @@ namespace DAL.Migrations
                     b.HasOne("DAL.Models.Subcategory", "Subcategory")
                         .WithMany()
                         .HasForeignKey("SubcategoryId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("Category");
 

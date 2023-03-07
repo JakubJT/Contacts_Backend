@@ -37,8 +37,7 @@ public class ContactsContext : DbContext
          b.HasOne("DAL.Models.Subcategory", "Subcategory")
              .WithMany()
              .HasForeignKey("SubcategoryId")
-             .OnDelete(DeleteBehavior.NoAction)
-             .IsRequired();
+             .OnDelete(DeleteBehavior.NoAction);
      });
     }
 }

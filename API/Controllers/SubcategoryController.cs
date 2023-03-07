@@ -17,7 +17,6 @@ public class SubcategoryController : ControllerBase
     }
 
     [HttpGet]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<List<Subcategory>>> GetAllDefaultSubcategories()

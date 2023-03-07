@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Identity.Web.Resource;
 using MediatR;
 using AppServices.Models;
 using AppServices.ContactsActions.Queries;
@@ -21,7 +20,6 @@ public class ContactsController : ControllerBase
     }
 
     [HttpGet]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<List<ContactBaseInformation>>> GetAllContacts()
@@ -54,46 +52,74 @@ public class ContactsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> CreateContact(Contact contact)
     {
+        //Checking if email in contact is unique
         var isEmailUnique = await _mediator.Send(new CheckEmailUniquenessQuery() { Email = contact.Email! });
         if (isEmailUnique == false) return Conflict();
 
-        if (contact.Subcategory.IsDefaultSubcategory == false)
+        //Creating new subcategory if necessary
+        if (contact.Subcategory != null && contact.Subcategory.IsDefaultSubcategory == false)
         {
-            await _mediator.Send(new CreateSubcategoryCommand() { SubcategoryName = contact.Subcategory.Name });
+            int subcategoryId = await _mediator
+                .Send(new CreateSubcategoryCommand()
+                {
+                    SubcategoryName = contact.Subcategory.Name,
+                    CategoryId = contact.CategoryId
+                });
+            contact.Subcategory.SubcategoryId = subcategoryId;
         }
 
+        //Creating new contact
         await _mediator.Send(new CreateContactCommand() { Contact = contact });
         return NoContent();
     }
 
     [HttpPost]
     [Authorize]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> EditContact(Contact contact)
     {
+        //Checking if contact exists in database
         var contactFromDB = await _mediator.Send(new GetContactByIdQuery() { ContactId = contact.ContactId });
         if (contactFromDB == null) return NotFound();
 
-        var isEmailUnique = await _mediator.Send(new CheckEmailUniquenessQuery() { Email = contact.Email! });
-        if (isEmailUnique == false) return Conflict();
+        //Checking if email in contact is unique
+        if (contactFromDB.Email != contact.Email)
+        {
+            var isEmailUnique = await _mediator.Send(new CheckEmailUniquenessQuery() { Email = contact.Email! });
+            if (isEmailUnique == false) return Conflict();
+        }
 
+        //Creating new subcategory if necessary
+        if (contact.Subcategory != null && contact.Subcategory.IsDefaultSubcategory == false)
+        {
+            int subcategoryId = await _mediator.Send(new CreateSubcategoryCommand()
+            {
+                SubcategoryName = contact.Subcategory.Name,
+                CategoryId = contact.CategoryId
+            });
+            contact.Subcategory.SubcategoryId = subcategoryId;
+        }
+
+        //Contact editing
         await _mediator.Send(new EditContactCommand() { Contact = contact });
         return NoContent();
     }
 
     [HttpDelete]
     [Authorize]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<IActionResult> DeleteContacts(int contactId)
+    public async Task<IActionResult> DeleteContact(int contactId)
     {
+        //Checking if contact exists in database
         var contactFromDB = await _mediator.Send(new GetContactByIdQuery() { ContactId = contactId });
         if (contactFromDB == null) return NotFound();
 
+        //Deleting contact
         await _mediator.Send(new DeleteContactCommand() { ContactId = contactId });
         return NoContent();
     }

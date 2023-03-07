@@ -8,4 +8,5 @@ public class Category
     [Required]
     public string Name { get; set; }
     public bool IsAddingSubcategoryPossible { get; set; } = false;
+    public bool DoesHaveSubcategories { get; set; } = false;
 }

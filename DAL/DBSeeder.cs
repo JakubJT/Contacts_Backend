@@ -13,6 +13,7 @@ public static class DBSeeder
         var categoryOne = new Category()
         {
             Name = "Business",
+            DoesHaveSubcategories = true
         };
         var categoryTwo = new Category()
         {
@@ -21,7 +22,8 @@ public static class DBSeeder
         var categoryThree = new Category()
         {
             Name = "Other",
-            IsAddingSubcategoryPossible = true
+            IsAddingSubcategoryPossible = true,
+            DoesHaveSubcategories = true
         };
         context.AddRange(categoryOne, categoryTwo, categoryThree);
         context.SaveChanges();
@@ -58,31 +60,44 @@ public static class DBSeeder
         {
             Name = "Kazimierz",
             Surname = "Wielki",
-            Password = "ffds333D",
+            Password = "Abb333&&",
+            Email = "malpa4@mapla.pl",
             Category = categoryOne,
             Subcategory = subcategoryOne,
-            PhoneNumber = "0000333"
+            PhoneNumber = "012345678"
         };
         var secondContact = new Contact()
         {
             Name = "Kazimierz",
             Surname = "Jagiellończyk",
-            Password = "ffds",
-            Category = categoryTwo,
+            Password = "Abb333***",
+            Email = "malpa3@mapla.pl",
+            Category = categoryOne,
             Subcategory = subcategoryTwo,
-            PhoneNumber = "0000333"
+            PhoneNumber = "512365678"
         };
         var thirdContact = new Contact()
         {
             Name = "Bolesław",
             Surname = "Chrobry",
-            Password = "ffds333",
+            Password = "dAbb333***",
+            Email = "malpa1@mapla.pl",
             Category = categoryThree,
             Subcategory = subcategoryFour,
-            PhoneNumber = "0000333"
+            PhoneNumber = "912445628"
 
         };
-        context.AddRange(firstContact, secondContact, thirdContact);
+        var fourthContact = new Contact()
+        {
+            Name = "Bolesław II",
+            Surname = "Niechrobry",
+            Email = "malpa2@mapla.pl",
+            Password = "Abb333***",
+            Category = categoryTwo,
+            PhoneNumber = "912445628"
+
+        };
+        context.AddRange(firstContact, secondContact, thirdContact, fourthContact);
         context.SaveChanges();
 
     }
